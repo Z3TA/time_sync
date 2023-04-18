@@ -1,0 +1,16 @@
+# sudo cp time_sync_server.systemd /etc/systemd/system/time_sync_server.service
+# sudo systemctl enable time_sync_server || sudo systemctl daemon-reload
+
+[Unit]
+Description=Master server for syncting time between virtual machines
+After=syslog.target network.target 
+
+[Service]
+WorkingDirectory=/tank/nodejs/time_sync/
+ExecStart=/usr/bin/nodejs server.js
+Restart=always
+StandardError=journal+console
+ExecStopPost=/tank/nodejs/crashreport/report.js %n
+
+[Install]
+WantedBy=multi-user.target
